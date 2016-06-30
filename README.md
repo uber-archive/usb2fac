@@ -1,6 +1,6 @@
 # USB2fac
 
-Enabling 2fac confirmation for newly connected USB devices
+This project provides a verification of connected USB devices, by adding a second factor of authentication using the [Duo Auth API](https://duo.com/docs/authapi).
 
 ## Requirements
 
@@ -22,7 +22,7 @@ Finally you will need the python library [requests](http://docs.python-requests.
 pip install requests
 ```
 
-Also, you will need access to the [Duo Auth API](https://duo.com/docs/authapi) in order to use their 2-factor capabilities.
+Also, you will need the [Duo Auth API](https://duo.com/docs/authapi) and create an application, in order to use the 2-factor capabilities.
 
 Provide your integration key, secret key and API hostname in the [configuration file](https://github.com/uber/usb2fac/blob/master/config.ini.example)
 
