@@ -1,0 +1,25 @@
+# OS artifacts
+.DS_Store
+
+# Editors
+*~
+\#*\#
+*.swp
+*.swn
+*.swo
+
+# Settings file
+config.ini
+
+# Backup file
+*.bak
+
+# Logs
+*.log
+*.old
+
+# Devices files
+*.json
+
+# PID file
+*.pid
