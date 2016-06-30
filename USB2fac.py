@@ -146,7 +146,7 @@ def usage():
 	print '  -D, --find 			Discover devices connected and stores them as seen.'
 	print '  -R, --reset 			Reset all the rejected devices.'
 	print '  -l, --log    FILE 		Log file for 2facUSB. Default is %s' % (get_conf('LOG_FILE'))
-	print '  -C, --conn  	VALUE 	Paranoia level for the connect action triggered: 1 = log, 2 = 2fac, 3 = lock'
+	print '  -C, --conn  	VALUE 	Paranoia level for the connect action triggered: 1 = log, 2 = lock, 3 = shutdown'
 	print '  -R, --action VALUE   Paranoia level for the reject action triggered: 1 = log, 2 = lock, 3 = shutdown'
 	print '  -c, --config FILE		File with Duo API access and configuration. Overrides all parameters. Default is %s' % (get_conf('CONFIG_FILE'))
 	print '  -o, --file   FILE		JSON file to be used as storage for seen devices. Default is %s' % (get_conf('DEVICES_FILE'))

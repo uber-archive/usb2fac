@@ -1,8 +1,10 @@
-# USB2fac
+# USB2fac ⚡️
 
-This project provides a verification of connected USB devices, by adding a second factor of authentication using the [Duo Auth API](https://duo.com/docs/authapi).
+This project provides a verification of connected USB devices, by using the [Duo Auth API](https://duo.com/docs/authapi).
 
-## Requirements
+When a device is connected for the first time in the host, an action will be triggered based on the configuration and it will require to be confirmed with a Duo push request.
+
+## Installation
 
 USB2fac requires [libusb](http://libusb.info/), you can install it using brew:
 
@@ -36,7 +38,7 @@ Arguments:
   -D, --find          Discover devices connected and stores them as seen.
   -R, --reset         Reset all the rejected devices.
   -l, --log    FILE   Log file for 2facUSB. Default is USB2fac.log
-  -C, --conn   VALUE  Paranoia level for the connect action triggered: 1 = log, 2 = 2fac, 3 = lock
+  -C, --conn   VALUE  Paranoia level for the connect action triggered: 1 = log, 2 = lock, 3 = shutdown
   -R, --action VALUE  Paranoia level for the reject action triggered: 1 = log, 2 = lock, 3 = shutdown
   -c, --config FILE   File with Duo API access and configuration. Overrides all parameters. Default is None
   -o, --file   FILE   JSON file to be used as storage for seen devices. Default is USB2fac.json
@@ -49,6 +51,14 @@ Examples:
   USB2fac.py -D -o usb.json -b usb.bak
   USB2fac.py -L 0 -o usb.json -b usb.bak -r reject.json
 ```
+
+## Contributing
+
+1. Fork it!
+2. Create your feature branch: `git checkout -b new-feature`
+3. Commit your changes: `git commit -am 'Some new feature'`
+4. Push to the branch: `git push origin new-feature`
+5. Send us a pull request 😎
 
 ## License
 
