@@ -2,14 +2,15 @@
 ikey: XXXXXXXXXXXXXXXXXXXX
 skey: XXXXXxXXxXXxxXxXXXXxXxXXXxXXXxXXXXXXxxXX
 host: api-XXXXXXXX.duosecurity.com
+username: someone_enrolled
 
 [Configuration]
 paranoia_connect: 2
 paranoia_reject: 2
 loop_delay: 0.2
-devices_file: 2facUSB.json
-backup_file: 2facUSB.bak
+devices_file: USB2fac.json
+backup_file: USB2fac.bak
 rejected_file: rejected.json
 config_file: config.ini
-log_file: 2facUSB.log
-pid_file: 2facUSB.pid
+log_file: USB2fac.log
+pid_file: USB2fac.pid

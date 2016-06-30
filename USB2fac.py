@@ -40,6 +40,7 @@ import signal
 import urllib
 import hashlib
 import logging
+import platform
 import requests
 import usb.core
 import usb.util
@@ -70,17 +71,18 @@ clear_requested_current = 0
 
 # Configuration with default values
 CONFIGURATION = {
-	'LOG_FILE': '2facUSB.log',
-	'DEVICES_FILE': '2facUSB.json',
-	'BACKUP_FILE': '2facUSB.bak',
+	'LOG_FILE': 'USB2fac.log',
+	'DEVICES_FILE': 'USB2fac.json',
+	'BACKUP_FILE': 'USB2fac.bak',
 	'REJECTED_FILE': 'rejected.json',
 	'CONFIG_FILE': None,
-	'PID_FILE': '2facUSB.pid',
+	'PID_FILE': 'USB2fac.pid',
 	'PARANOIA_CONNECT': 1,
 	'PARANOIA_REJECT': 2,
 	'DISCOVER': False,
 	'RESET': False,
 	'LOOP_DELAY': 0.2,
+	'USERNAME': '',
 	'DUO_IKEY': '',
 	'DUO_SKEY': '',
 	'DUO_HOST': ''
@@ -112,6 +114,7 @@ def load_conf(FILE):
 		set_conf('DUO_IKEY', Config.get('DuoApiAuth', 'ikey'))
 		set_conf('DUO_SKEY', Config.get('DuoApiAuth', 'skey'))
 		set_conf('DUO_HOST', Config.get('DuoApiAuth', 'host'))
+		set_conf('USERNAME', Config.get('DuoApiAuth', 'username'))
 		# Configuration parameters
 		set_conf('PARANOIA_CONNECT', int(Config.get('Configuration', 'paranoia_connect')))
 		set_conf('PARANOIA_REJECT', int(Config.get('Configuration', 'paranoia_reject')))
@@ -150,6 +153,7 @@ def usage():
 	print '  -b, --backup FILE  	JSON file with a backup of the trusted/seen USB devices. Default is %s' % (get_conf('BACKUP_FILE'))
 	print '  -r, --reject FILE 		JSON file to keep track of the rejected USB devices. Default is %s' % (get_conf('REJECTED_FILE'))
 	print '  -p, --pid    FILE 		File to keep track of the daemon PID. Default is %s' % (get_conf('PID_FILE'))
+	print '  -u  --user   VALUE 	Username to use for the DUO integration and send the push request.'
 	print 
 	print 'Examples:'
 	print '  %s -D -o usb.json -b usb.bak' % (sys.argv[0])
@@ -173,25 +177,10 @@ def get_duo_headers(method, host, path, params, skey, ikey):
 
     return {'Date': now, 'Authorization': 'Basic %s' % base64.b64encode(auth)}
 
-# Function to parse the chef enrolled file
-def chef_enrolled_owner():
-	# This is shit for now
-	username = None
-	chef_file = '/private/var/lib/.management/user_attributes'
-	f = open(chef_file, 'r')
-
-	for line in f:
-		if re.match("^Email : ", line):
-			username = line.split(' : ')[1]
-	f.close()
-
-	return username
-
 # Function to parse the DUO Auth API configuration
 def duo_2fac_confirmation(description):
 	# Extract username for DUO from chef configuration
-	username = chef_enrolled_owner()
-
+	username = get_conf('USERNAME')
 	duo_host = get_conf('DUO_HOST')
 	duo_skey = get_conf('DUO_SKEY')
 	duo_ikey = get_conf('DUO_IKEY')
@@ -217,7 +206,7 @@ def duo_2fac_confirmation(description):
 		return False
 
 	# Make sure this usename is ready for push
-	duo_path = '/auth/v2/auth'
+	duo_path = '/auth/v2/preauth'
 	duo_url = 'https://' + duo_host + duo_path
 	params = {'username': username}
 
@@ -461,12 +450,12 @@ def running_daemon():
 # Main function with parameters extraction and run 
 def main():
 	# Need to run as root
-	if os.geteuid() != 0:
-		exit("You need to have root privileges to run this script.\nPlease try again, this time using 'sudo'. Exiting.")
+	#if os.geteuid() != 0:
+	#	exit("You need to have root privileges to run this script.\nPlease try again, this time using 'sudo'. Exiting.")
 	
-	# Script only works in OSX/Linux now
-	if os.name != 'posix':
-		print 'Sorry, system not supported.'
+	# Script only works in OSX now
+	if platform.system() != 'Darwin':
+		print 'Sorry, only OSX systems are supported.'
 		sys.exit(1)
 
 	# Create pid file
@@ -485,7 +474,7 @@ def main():
 	logger.addHandler(handler)
 
 	try:
-		opts, args = getopt.getopt(sys.argv[1:], "hDRc:l:C:R:o:b:r:p:", ["help", "find", "reset", "config", "log", "conn", "action", "file", "backup", "reject", "pid"])
+		opts, args = getopt.getopt(sys.argv[1:], "hDRc:l:C:R:o:b:r:p:u:", ["help", "find", "reset", "config", "log", "conn", "action", "file", "backup", "reject", "pid", "user"])
   	except getopt.GetoptError:
   		usage()
   		sys.exit(2)
@@ -516,6 +505,8 @@ def main():
   			set_conf('REJECT_FILE', arg)
   		elif opt in ("-p", "--pid"):
   			set_conf('PID_FILE', arg)
+  		elif opt in ("-u", "--user"):
+  			set_conf('USERNAME', arg)
 	
 	if get_conf('DISCOVERY'):
 		discovery()
