@@ -22,6 +22,9 @@ Finally you will need the python library [requests](http://docs.python-requests.
 pip install requests
 ```
 
+Also, you will need access to the [Duo Auth API](https://duo.com/docs/authapi) in order to use their 2-factor capabilities.
+Provide your integration key, secret key and API hostname in the [configuration file](https://github.com/uber/usb2fac/blob/master/config.ini.example)
+
 ## Usage
 
 ```
