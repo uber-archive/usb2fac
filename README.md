@@ -1,4 +1,6 @@
-# USB2fac - Enabling 2fac confirmation for newly connected USB devices
+# USB2fac
+
+Enabling 2fac confirmation for newly connected USB devices
 
 ## Description
 
@@ -6,7 +8,9 @@
 
 USB2fac requires [libusb](http://libusb.info/), you can install it using brew:
 
-```brew install libusb```
+```
+brew install libusb
+```
 
 Then you need to install the python bindings, ```pyusb```:
 
