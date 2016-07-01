@@ -2,7 +2,7 @@
 
 This project provides a verification of connected USB devices, by using the [Duo Auth API](https://duo.com/docs/authapi).
 
-When a device is connected for the first time in the host, an action will be triggered based on the configuration and it will require to be confirmed with a Duo push request.
+When a device is connected for the first time to the host, an action will be triggered based on the configuration and it will require to be confirmed with a Duo push request.
 If the device is not confirmed, or explicitly rejected, an second action (also configurable) will be triggered.
 The purpose of **USB2fac** is to orchestrate the described actions, while keeping track of all the connected USB devices. In the event of an incident, this information can be useful for the Security team.
 
