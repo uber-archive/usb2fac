@@ -56,12 +56,11 @@ Examples:
 
 ## Contributing
 
-1. Fork it!
-2. Create your feature branch: `git checkout -b new-feature`
-3. Commit your changes: `git commit -am 'Some new feature'`
-4. Push to the branch: `git push origin new-feature`
-5. Send us a pull request 😎
+We :heart: contributions. Found a bug or looking for a new feature? Open an issue and we'll respond as fast as we can. Or, better yet, implement it yourself and open a pull request! We ask that you include tests to show the bug was fixed or the feature works as expected.
+
+**Note:** All contributors also need to fill out the [Uber Contributor License Agreement](http://t.uber.com/cla) before we can merge in any of your changes.
+
 
 ## License
 
-MIT License, please see `LICENSE` for details.
+MIT License, please see [LICENSE](https://github.com/uber/usb2fac/blob/master/LICENSE) for details.
