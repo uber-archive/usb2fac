@@ -209,6 +209,10 @@ def duo_2fac_confirmation(description):
 	duo_path = '/auth/v2/preauth'
 	duo_url = 'https://' + duo_host + duo_path
 	params = {'username': username}
+	duo_headers = get_duo_headers('POST', duo_host, duo_path, params, duo_skey, duo_ikey)
+	r = requests.post(duo_url, data=params, headers=duo_headers)
+	if r.json()['stat'] != 'OK':
+		return False
 
 	# Submit duo push request
 	duo_path = '/auth/v2/auth'
@@ -384,8 +388,8 @@ def discover_devices(check_trusted=False):
 				requested_ids.append(device_id)
 
 			# Log trusted device
-			if device_id in trusted_ids:
-				logger.info('Trusted device connected: %s' % (device_entry(vendor, product, serial, description, device_id)))
+			#if device_id in trusted_ids:
+			#	logger.info('Trusted device connected: %s' % (device_entry(vendor, product, serial, description, device_id)))
 
 			# Avoid smashing DUO with requests
 			if clear_requested_current > clear_requested_timeout and device_id in requested_ids:
@@ -449,11 +453,7 @@ def running_daemon():
 
 # Main function with parameters extraction and run 
 def main():
-	# Need to run as root
-	#if os.geteuid() != 0:
-	#	exit("You need to have root privileges to run this script.\nPlease try again, this time using 'sudo'. Exiting.")
-	
-	# Script only works in OSX now
+	# Script only works in OSX
 	if platform.system() != 'Darwin':
 		print 'Sorry, only OSX systems are supported.'
 		sys.exit(1)
