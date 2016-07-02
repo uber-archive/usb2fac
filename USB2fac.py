@@ -18,15 +18,13 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 #
-# (javierm@uber.com)
-#
-# Script to enable 2fac confirmation to newly connected USB devices
+# Script to enable 2fac confirmation to newly connected USB devices.
 #
 # Make sure libusb, pyUSB and requests are installed in the system:
 #
-# 	brew install libusb / sudo apt-get install libusb
-# 	sudo pip install pyusb --pre
-# 	pip install requests
+#  brew install libusb
+#  sudo pip install pyusb --pre
+#  pip install requests
 
 import os
 import re
@@ -348,7 +346,7 @@ def discover_devices(check_trusted=False):
 			"description" : description
 		}
 		current_data.append(device_entry(vendor, product, serial, description, device_id))
-			
+
 		if check_trusted:
 			rejected = load_rejected_devices()
 			rejected_ids = gen_device_id_list(rejected)
@@ -388,7 +386,7 @@ def discover_devices(check_trusted=False):
 				requested_ids.append(device_id)
 
 			# Log trusted device
-			#if device_id in trusted_ids:
+			#if device_id not in current_trusted_ids:
 			#	logger.info('Trusted device connected: %s' % (device_entry(vendor, product, serial, description, device_id)))
 
 			# Avoid smashing DUO with requests

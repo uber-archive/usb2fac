@@ -3,32 +3,34 @@
 This project provides a verification of connected USB devices, by using the [Duo Auth API](https://duo.com/docs/authapi).
 
 When a device is connected for the first time to the host, an action will be triggered based on the configuration and it will require to be confirmed with a Duo push request.
-If the device is not confirmed, or explicitly rejected, an second action (also configurable) will be triggered.
+If the device is not confirmed, or explicitly rejected, a second action (also configurable) will be triggered.
 The purpose of **USB2fac** is to orchestrate the described actions, while keeping track of all the connected USB devices. In the event of an incident, this information can be useful for the Security team.
 
 ## Installation
 
+For now, only OSX is supported.
+
 USB2fac requires [libusb](http://libusb.info/), you can install it using brew:
 
 ```
-brew install libusb
+$ brew install libusb
 ```
 
 Then you need to install the python bindings, [pyusb](https://walac.github.io/pyusb/):
 
 ```
-sudo pip install pyusb --pre
+$ sudo pip install pyusb --pre
 ```
 
 Finally you will need the python library [requests](http://docs.python-requests.org/). Install it using pip:
 
 ```
-pip install requests
+$ pip install requests
 ```
 
 Also, you will need the [Duo Auth API](https://duo.com/docs/authapi) and create an application, in order to use the 2-factor capabilities.
 
-Provide your integration key, secret key and API hostname in the [configuration file](https://github.com/uber/usb2fac/blob/master/config.ini.example)
+Provide your integration key, secret key and API hostname in the [configuration file](https://github.com/uber/usb2fac/blob/master/config.ini.example).
 
 ## Usage
 
