@@ -92,7 +92,10 @@ CONFIGURATION = {
 
 # Function that creates a notification in OSX
 def osx_notification(title, message):
-	subprocess.call('osascript -e \'display notification "%s" with title "%s"\'' % (message, title), shell=True)
+	subprocess.call(
+		'osascript -e \'display notification "%s" with title "%s"\'' 
+		% (message, title), 
+	shell=True)
 
 # Function to retrieve a configuration value
 def get_conf(confKey):
@@ -113,20 +116,58 @@ def load_conf(FILE):
 		Config = ConfigParser.ConfigParser()
 		Config.read(get_conf('CONFIG_FILE'))
 		# Duo Auth API
-		set_conf('DUO_IKEY', Config.get('DuoApiAuth', 'ikey'))
-		set_conf('DUO_SKEY', Config.get('DuoApiAuth', 'skey'))
-		set_conf('DUO_HOST', Config.get('DuoApiAuth', 'host'))
-		set_conf('USERNAME', Config.get('DuoApiAuth', 'username'))
+		set_conf(
+			'DUO_IKEY', 
+			Config.get('DuoApiAuth', 'ikey')
+		)
+		set_conf(
+			'DUO_SKEY', 
+			Config.get('DuoApiAuth', 'skey')
+		)
+		set_conf(
+			'DUO_HOST', 
+			Config.get('DuoApiAuth', 'host')
+		)
+		set_conf(
+			'USERNAME', 
+			Config.get('DuoApiAuth', 'username')
+		)
 		# Configuration parameters
-		set_conf('PARANOIA_CONNECT', int(Config.get('Configuration', 'paranoia_connect')))
-		set_conf('PARANOIA_REJECT', int(Config.get('Configuration', 'paranoia_reject')))
-		set_conf('LOOP_DELAY', float(Config.get('Configuration', 'loop_delay')))
-		set_conf('DEVICES_FILE', Config.get('Configuration', 'devices_file'))
-		set_conf('BACKUP_FILE', Config.get('Configuration', 'backup_file'))
-		set_conf('REJECTED_FILE', Config.get('Configuration', 'rejected_file'))
-		set_conf('LOG_FILE', Config.get('Configuration', 'log_file'))
-		set_conf('CONFIG_FILE', Config.get('Configuration', 'config_file'))
-		set_conf('PID_FILE', Config.get('Configuration', 'pid_file'))
+		set_conf(
+			'PARANOIA_CONNECT', 
+			int(Config.get('Configuration', 'paranoia_connect'))
+		)
+		set_conf(
+			'PARANOIA_REJECT', 
+			int(Config.get('Configuration', 'paranoia_reject'))
+		)
+		set_conf(
+			'LOOP_DELAY', 
+			float(Config.get('Configuration', 'loop_delay'))
+		)
+		set_conf(
+			'DEVICES_FILE', 
+			Config.get('Configuration', 'devices_file')
+		)
+		set_conf(
+			'BACKUP_FILE', 
+			Config.get('Configuration', 'backup_file')
+		)
+		set_conf(
+			'REJECTED_FILE', 
+			Config.get('Configuration', 'rejected_file')
+		)
+		set_conf(
+			'LOG_FILE', Config.get('Configuration', 'log_file')
+		)
+		set_conf(
+			'CONFIG_FILE', 
+			Config.get('Configuration', 'config_file')
+		)
+		set_conf(
+			'PID_FILE', 
+			Config.get('Configuration', 'pid_file')
+		)
 		#set_conf('DISCOVERY', Config.get('Configuration', 'discovery'))
 		#set_conf('RESET', Config.get('Configuration', 'reset'))
 
@@ -202,7 +243,14 @@ def duo_2fac_confirmation(description):
 	# Verify creds for duo
 	duo_path = '/auth/v2/check'
 	duo_url = 'https://' + duo_host + duo_path
-	duo_headers = get_duo_headers('GET', duo_host, duo_path, {}, duo_skey, duo_ikey)
+	duo_headers = get_duo_headers(
+		'GET', 
+		duo_host, 
+		duo_path, 
+		{}, 
+		duo_skey, 
+		duo_ikey
+	)
 	r = requests.get(duo_url, headers=duo_headers)
 	if r.json()['stat'] != 'OK':
 		return False
@@ -211,7 +259,14 @@ def duo_2fac_confirmation(description):
 	duo_path = '/auth/v2/preauth'
 	duo_url = 'https://' + duo_host + duo_path
 	params = {'username': username}
-	duo_headers = get_duo_headers('POST', duo_host, duo_path, params, duo_skey, duo_ikey)
+	duo_headers = get_duo_headers(
+		'POST', 
+		duo_host, 
+		duo_path, 
+		params, 
+		duo_skey, 
+		duo_ikey
+	)
 	r = requests.post(duo_url, data=params, headers=duo_headers)
 	if r.json()['stat'] != 'OK':
 		return False
@@ -220,8 +275,20 @@ def duo_2fac_confirmation(description):
 	duo_path = '/auth/v2/auth'
 	duo_url = 'https://' + duo_host + duo_path
 	push_msg = 'USB Connect: ' + description
-	params = {'username': username, 'factor': 'push', 'device': 'auto', 'type': push_msg}
-	duo_headers = get_duo_headers('POST', duo_host, duo_path, params, duo_skey, duo_ikey)
+	params = {
+		'username': username, 
+		'factor': 'push', 
+		'device': 'auto', 
+		'type': push_msg
+	}
+	duo_headers = get_duo_headers(
+		'POST', 
+		duo_host, 
+		duo_path, 
+		params, 
+		duo_skey, 
+		duo_ikey
+	)
 	r = requests.post(duo_url, data=params, headers=duo_headers)
 	if r.json()['response']['result'] == 'allow':
 		return True
@@ -291,13 +358,17 @@ def device_entry(vendor, product, serial, description, device_id):
 
 # Function that locks the computer
 def lock_computer():
-	subprocess.call('/System/Library/CoreServices/"Menu Extras"/User.menu/Contents/Resources/CGSession -suspend', shell=True)
+	subprocess.call(
+		'/System/Library/CoreServices/"Menu Extras"/User.menu/Contents/Resources/CGSession -suspend',
+		shell=True
+	)
 
 # Function that shutsdown the computer
 def shutdown_computer():
 	subprocess.call('shutdown -r now', shell=True)
 
-# Function that is triggered when a device is rejected, based on the paranoia level on reject.
+# Function that is triggered when a device is rejected.
+# Based on the paranoia level on reject.
 def reject_action():
 	if get_conf('PARANOIA_REJECT') == 1:
 		logger.info('2facUSB Action: Unknown device was rejected')
@@ -308,7 +379,8 @@ def reject_action():
 		logger.info('2facUSB Action: Shuting down computer')
 		shutdown_computer()
 
-# Function that is triggered when a new device is connected, based on the paranoia level on connect.
+# Function that is triggered when a new device is connected.
+# Based on the paranoia level on connect.
 def connect_action():
 	if get_conf('PARANOIA_CONNECT') == 1:
 		logger.info('2facUSB Action: Unknown device was connected')
@@ -323,7 +395,8 @@ def connect_action():
 def reset_rejected():
 	save_rejected_devices([])
 
-# Function to discover connected devices and verify them against trusted or stored them
+# Function to discover currently connected devices.
+# Parameter is to verify them against trusted or just return them.
 def discover_devices(check_trusted=False):
 	dev = usb.core.find(find_all=True)
 
@@ -349,7 +422,9 @@ def discover_devices(check_trusted=False):
 			"serialNumber" : serial,
 			"description" : description
 		}
-		current_data.append(device_entry(vendor, product, serial, description, device_id))
+		current_data.append(
+			device_entry(vendor, product, serial, description, device_id)
+		)
 
 		if check_trusted:
 			rejected = load_rejected_devices()
@@ -360,11 +435,23 @@ def discover_devices(check_trusted=False):
 			global requested_ids
 			if device_id not in trusted_ids and device_id not in requested_ids:
 				if device_id in rejected_ids:
-					logger.info('REJECTED DEVICE CONNECTED! %s' % (device_entry(vendor, product, serial, description, device_id)))
-					osx_notification('Rejected USB Device Connected', 'Use DUO in your phone to verify and trust this device')
+					logger.info(
+						'REJECTED DEVICE CONNECTED! %s' 
+						% (device_entry(vendor, product, serial, description, device_id))
+					)
+					osx_notification(
+						'Rejected USB Device Connected', 
+						'Use DUO in your phone to verify and trust this device'
+					)
 				else:
-					logger.info('UNKNOWN DEVICE CONNECTED! %s' % (device_entry(vendor, product, serial, description, device_id)))
-					osx_notification('Unknown USB Device Connected', 'Use DUO in your phone to verify and trust this device')
+					logger.info(
+						'UNKNOWN DEVICE CONNECTED! %s' 
+						% (device_entry(vendor, product, serial, description, device_id))
+					)
+					osx_notification(
+						'Unknown USB Device Connected', 
+						'Use DUO in your phone to verify and trust this device'
+					)
 
 				# Based on the level of paranoia, do the connect action
 				connect_action()
@@ -375,13 +462,17 @@ def discover_devices(check_trusted=False):
 					# Backup trusted devices
 					backup_trusted_devices(trusted)
 					# Save device as trusted
-					trusted.append(device_entry(vendor, product, serial, description, device_id))
+					trusted.append(
+						device_entry(vendor, product, serial, description, device_id)
+					)
 					save_trusted_devices(trusted)
 					logger.info('Verified and saved')
 					osx_notification('USB Device Trusted', 'Have a nice day!')
 				else:
 					# No confirmation through 2fac, do the needful
-					rejected.append(device_entry(vendor, product, serial, description, device_id))
+					rejected.append(
+						device_entry(vendor, product, serial, description, device_id)
+					)
 					save_rejected_devices(rejected)
 					logger.info('Device has been Rejected')
 					reject_action()
@@ -391,11 +482,17 @@ def discover_devices(check_trusted=False):
 
 			# Log trusted device
 			if device_id not in current_trusted_ids:
-				logger.info('Trusted device connected: %s' % (device_entry(vendor, product, serial, description, device_id)))
+				logger.info(
+					'Trusted device connected: %s' 
+					% (device_entry(vendor, product, serial, description, device_id))
+				)
 				current_trusted_ids.append(device_id)
 
 			# Avoid smashing DUO with requests
-			if clear_requested_current > clear_requested_timeout and device_id in requested_ids:
+			if (
+				clear_requested_current > clear_requested_timeout and 
+				device_id in requested_ids
+			):
 				requested_ids.remove(device_id)
 
 	return current_data
@@ -470,14 +567,25 @@ def main():
 	signal.signal(signal.SIGUSR2, signal_handler)
 
 	# Setting up logging
-	handler = logging.handlers.TimedRotatingFileHandler(get_conf('LOG_FILE'), when="midnight", backupCount=3)
+	handler = logging.handlers.TimedRotatingFileHandler(
+		get_conf('LOG_FILE'), 
+		when="midnight", 
+		backupCount=3
+	)
 	handler.suffix = "%Y-%m-%d.old"
 	formatter = logging.Formatter('%(asctime)s %(levelname)-8s %(message)s')
 	handler.setFormatter(formatter)
 	logger.addHandler(handler)
 
 	try:
-		opts, args = getopt.getopt(sys.argv[1:], "hDRc:l:C:R:o:b:r:p:u:", ["help", "find", "reset", "config", "log", "conn", "action", "file", "backup", "reject", "pid", "user"])
+		opts, args = getopt.getopt(
+			sys.argv[1:], 
+			"hDRc:l:C:R:o:b:r:p:u:", 
+			[
+				"help", "find", "reset", "config", "log", "conn", 
+				"action", "file", "backup", "reject", "pid", "user"
+			]
+		)
   	except getopt.GetoptError:
   		usage()
   		sys.exit(2)
