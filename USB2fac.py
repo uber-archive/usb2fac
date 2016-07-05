@@ -159,7 +159,7 @@ def usage():
 	print
 	print 'Examples:'
 	print '  %s -D -o usb.json -b usb.bak' % (sys.argv[0])
-	print '  %s -L 0 -o usb.json -b usb.bak -r reject.json' % (sys.argv[0])
+	print '  %s -C 2 -R 1 -o usb.json -b usb.bak -r reject.json' % (sys.argv[0])
 
 # Function to sign a request to be sent to Duo. Output is Date and Auth headers.
 def get_duo_headers(method, host, path, params, skey, ikey):

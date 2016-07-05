@@ -53,7 +53,7 @@ Arguments:
 
 Examples:
   USB2fac.py -D -o usb.json -b usb.bak
-  USB2fac.py -L 0 -o usb.json -b usb.bak -r reject.json
+  USB2fac.py -C 2 -R 1 -o usb.json -b usb.bak -r reject.json
 ```
 
 ## Contributing
