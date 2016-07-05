@@ -25,7 +25,7 @@ $ sudo pip install pyusb --pre
 Finally you will need the python library [requests](http://docs.python-requests.org/). Install it using pip:
 
 ```
-$ pip install requests
+$ sudo pip install requests
 ```
 
 Also, you will need the [Duo Auth API](https://duo.com/docs/authapi) and create an application, in order to use the 2-factor capabilities.

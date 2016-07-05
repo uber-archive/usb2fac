@@ -24,7 +24,7 @@
 #
 #  brew install libusb
 #  sudo pip install pyusb --pre
-#  pip install requests
+#  sudo pip install requests
 
 import os
 import re
@@ -136,7 +136,7 @@ def load_conf(FILE):
 
 # Function to display usage of script
 def usage():
-	print 
+	print
 	print 'Script to enable 2fac confirmation to newly connected USB devices'
 	print
 	print 'Usage: %s [-h|--help] [ARGUMENT [PARAMETER]] [ARGUMENT [PARAMETER]] ..' % (sys.argv[0])
@@ -154,7 +154,7 @@ def usage():
 	print '  -r, --reject FILE 		JSON file to keep track of the rejected USB devices. Default is %s' % (get_conf('REJECTED_FILE'))
 	print '  -p, --pid    FILE 		File to keep track of the daemon PID. Default is %s' % (get_conf('PID_FILE'))
 	print '  -u  --user   VALUE 	Username to use for the DUO integration and send the push request.'
-	print 
+	print
 	print 'Examples:'
 	print '  %s -D -o usb.json -b usb.bak' % (sys.argv[0])
 	print '  %s -L 0 -o usb.json -b usb.bak -r reject.json' % (sys.argv[0])
@@ -196,7 +196,7 @@ def duo_2fac_confirmation(description):
 	r = requests.get(duo_url)
 	if r.json()['stat'] != 'OK':
 		return False
-	
+
 	# Verify creds for duo
 	duo_path = '/auth/v2/check'
 	duo_url = 'https://' + duo_host + duo_path
@@ -234,7 +234,7 @@ def save_devices_file(jsonData, FILE):
 # Function to backup a structure of trusted devices
 def backup_trusted_devices(jsonData):
 	save_devices_file(jsonData, get_conf('BACKUP_FILE'))
-	
+
 # Function to keep track of rejected devices
 def save_rejected_devices(jsonData):
 	save_devices_file(jsonData, get_conf('REJECTED_FILE'))
@@ -260,7 +260,7 @@ def load_devices(FILE):
 		data = []
 
 	return data
-	
+
 # Function to generate a device_id
 def gen_device_id(vendor, product):
 	return hashlib.md5(str(vendor) + str(product)).hexdigest()
@@ -324,7 +324,7 @@ def reset_rejected():
 # Function to discover connected devices and verify them against trusted or stored them
 def discover_devices(check_trusted=False):
 	dev = usb.core.find(find_all=True)
-	
+
 	current_data = []
 	for cfg in dev:
 		vendor = hex(cfg.idVendor)
@@ -354,7 +354,7 @@ def discover_devices(check_trusted=False):
 			rejected_ids = gen_device_id_list(rejected)
 			trusted = load_trusted_devices()
 			trusted_ids = gen_device_id_list(trusted)
-				
+
 			global requested_ids
 			if device_id not in trusted_ids and device_id not in requested_ids:
 				if device_id in rejected_ids:
@@ -363,7 +363,7 @@ def discover_devices(check_trusted=False):
 				else:
 					logger.info('UNKNOWN DEVICE CONNECTED! %s' % (device_entry(vendor, product, serial, description, device_id)))
 					osx_notification('Unknown USB Device Connected', 'Use DUO in your phone to verify and trust this device')
-				
+
 				# Based on the level of paranoia, do the connect action
 				connect_action()
 
@@ -395,7 +395,7 @@ def discover_devices(check_trusted=False):
 			# Avoid smashing DUO with requests
 			if clear_requested_current > clear_requested_timeout and device_id in requested_ids:
 				requested_ids.remove(device_id)
-			
+
 	return current_data
 
 # Function that handles SIGUSR1 and SIGUSR2 for 2facUSB
@@ -420,7 +420,7 @@ def create_pidfile():
 	pid = str(os.getpid())
 	with open(PID_FILE, "w+") as f:
 		f.write(pid + "\n")
-	
+
 # Function that detects all current USB devices and persists them in a JSON file
 def discovery():
 	logger.info('Discovering devices...')
@@ -432,7 +432,7 @@ def running_daemon():
 	# Output to log
 	sys.stdout = USBLogger(logger, logging.INFO)
 	sys.stderr = USBLogger(logger, logging.ERROR)
-	
+
 	logger.info('Starting 2facUSB...')
 	logger.info('PID is %d' % (os.getpid()))
 
@@ -452,7 +452,7 @@ def running_daemon():
 			logger.info('Stopped by CTRL + C')
 			sys.exit()
 
-# Main function with parameters extraction and run 
+# Main function with parameters extraction and run
 def main():
 	# Script only works in OSX
 	if platform.system() != 'Darwin':
@@ -479,7 +479,7 @@ def main():
   	except getopt.GetoptError:
   		usage()
   		sys.exit(2)
-	
+
 	for opt, arg in opts:
 		if opt in ("-h", "--help"):
 			usage()
@@ -508,7 +508,7 @@ def main():
   			set_conf('PID_FILE', arg)
   		elif opt in ("-u", "--user"):
   			set_conf('USERNAME', arg)
-	
+
 	if get_conf('DISCOVERY'):
 		discovery()
 	if get_conf('RESET'):
