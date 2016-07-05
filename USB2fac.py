@@ -395,6 +395,10 @@ def connect_action():
 def reset_rejected():
 	save_rejected_devices([])
 
+# Function to do input validation on device supplied ids
+def sanitize_id(id):
+	return re.sub(r'[^-_A-Za-z0-9\ \']', '', id)
+
 # Function to discover currently connected devices.
 # Parameter is to verify them against trusted or just return them.
 def discover_devices(check_trusted=False):
@@ -406,12 +410,12 @@ def discover_devices(check_trusted=False):
 		product = hex(cfg.idProduct)
 		# Serial number
 		try:
-			serial = str(usb.util.get_string(cfg, cfg.iSerialNumber))
+			serial = sanitize_id(str(usb.util.get_string(cfg, cfg.iSerialNumber)))
 		except:
 			serial = 'Unknown'
 		# Description
 		try:
-			description = str(usb.util.get_string(cfg, cfg.iProduct))
+			description = sanitize_id(str(usb.util.get_string(cfg, cfg.iProduct)))
 		except:
 			description = 'Unknown'
 
