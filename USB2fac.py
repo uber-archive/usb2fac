@@ -61,6 +61,8 @@ class USBLogger(object):
 
 # List to hold those devices that were requested, to avoid smashing Duo
 requested_ids = []
+# List to hold the trusted devices that get connected
+current_trusted_ids = []
 
 # Iterations to clear requested_ids
 # This will be multiplied by the LOOP_DELAY
@@ -386,8 +388,9 @@ def discover_devices(check_trusted=False):
 				requested_ids.append(device_id)
 
 			# Log trusted device
-			#if device_id not in current_trusted_ids:
-			#	logger.info('Trusted device connected: %s' % (device_entry(vendor, product, serial, description, device_id)))
+			if device_id not in current_trusted_ids:
+				logger.info('Trusted device connected: %s' % (device_entry(vendor, product, serial, description, device_id)))
+				current_trusted_ids.append(device_id)
 
 			# Avoid smashing DUO with requests
 			if clear_requested_current > clear_requested_timeout and device_id in requested_ids:
