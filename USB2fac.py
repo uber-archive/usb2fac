@@ -93,8 +93,8 @@ CONFIGURATION = {
 # Function that creates a notification in OSX
 def osx_notification(title, message):
 	subprocess.call(
-		'osascript -e \'display notification "%s" with title "%s"\'' 
-		% (message, title), 
+		'osascript -e \'display notification "%s" with title "%s"\''
+		% (message, title),
 	shell=True)
 
 # Function to retrieve a configuration value
@@ -117,55 +117,55 @@ def load_conf(FILE):
 		Config.read(get_conf('CONFIG_FILE'))
 		# Duo Auth API
 		set_conf(
-			'DUO_IKEY', 
+			'DUO_IKEY',
 			Config.get('DuoApiAuth', 'ikey')
 		)
 		set_conf(
-			'DUO_SKEY', 
+			'DUO_SKEY',
 			Config.get('DuoApiAuth', 'skey')
 		)
 		set_conf(
-			'DUO_HOST', 
+			'DUO_HOST',
 			Config.get('DuoApiAuth', 'host')
 		)
 		set_conf(
-			'USERNAME', 
+			'USERNAME',
 			Config.get('DuoApiAuth', 'username')
 		)
 		# Configuration parameters
 		set_conf(
-			'PARANOIA_CONNECT', 
+			'PARANOIA_CONNECT',
 			int(Config.get('Configuration', 'paranoia_connect'))
 		)
 		set_conf(
-			'PARANOIA_REJECT', 
+			'PARANOIA_REJECT',
 			int(Config.get('Configuration', 'paranoia_reject'))
 		)
 		set_conf(
-			'LOOP_DELAY', 
+			'LOOP_DELAY',
 			float(Config.get('Configuration', 'loop_delay'))
 		)
 		set_conf(
-			'DEVICES_FILE', 
+			'DEVICES_FILE',
 			Config.get('Configuration', 'devices_file')
 		)
 		set_conf(
-			'BACKUP_FILE', 
+			'BACKUP_FILE',
 			Config.get('Configuration', 'backup_file')
 		)
 		set_conf(
-			'REJECTED_FILE', 
+			'REJECTED_FILE',
 			Config.get('Configuration', 'rejected_file')
 		)
 		set_conf(
 			'LOG_FILE', Config.get('Configuration', 'log_file')
 		)
 		set_conf(
-			'CONFIG_FILE', 
+			'CONFIG_FILE',
 			Config.get('Configuration', 'config_file')
 		)
 		set_conf(
-			'PID_FILE', 
+			'PID_FILE',
 			Config.get('Configuration', 'pid_file')
 		)
 		#set_conf('DISCOVERY', Config.get('Configuration', 'discovery'))
@@ -185,22 +185,22 @@ def usage():
 	print 'Usage: %s [-h|--help] [ARGUMENT [PARAMETER]] [ARGUMENT [PARAMETER]] ..' % (sys.argv[0])
 	print
 	print 'Arguments:'
-	print '  -h, --help 			Shows this help message and exit.'
-	print '  -D, --find 			Discover devices connected and stores them as seen.'
-	print '  -R, --reset 			Reset all the rejected devices.'
-	print '  -l, --log    FILE 		Log file for 2facUSB. Default is %s' % (get_conf('LOG_FILE'))
-	print '  -C, --conn  	VALUE 	Paranoia level for the connect action triggered: 1 = log, 2 = lock, 3 = shutdown'
-	print '  -R, --action VALUE   Paranoia level for the reject action triggered: 1 = log, 2 = lock, 3 = shutdown'
-	print '  -c, --config FILE		File with Duo API access and configuration. Overrides all parameters. Default is %s' % (get_conf('CONFIG_FILE'))
-	print '  -o, --file   FILE		JSON file to be used as storage for seen devices. Default is %s' % (get_conf('DEVICES_FILE'))
-	print '  -b, --backup FILE  	JSON file with a backup of the trusted/seen USB devices. Default is %s' % (get_conf('BACKUP_FILE'))
-	print '  -r, --reject FILE 		JSON file to keep track of the rejected USB devices. Default is %s' % (get_conf('REJECTED_FILE'))
-	print '  -p, --pid    FILE 		File to keep track of the daemon PID. Default is %s' % (get_conf('PID_FILE'))
-	print '  -u  --user   VALUE 	Username to use for the DUO integration and send the push request.'
+	print '  -h, --help           Shows this help message and exit.'
+	print '  -D, --find           Discover devices connected and stores them as seen.'
+	print '  -R, --reset          Reset all the rejected devices.'
+	print '  -l, --log    FILE    Log file for 2facUSB. Default is %s' % (get_conf('LOG_FILE'))
+	print '  -C, --conn   VALUE   Paranoia level for the connect action triggered: 1 = log, 2 = lock, 3 = shutdown'
+	print '  -P, --action VALUE   Paranoia level for the reject action triggered: 1 = log, 2 = lock, 3 = shutdown'
+	print '  -c, --config FILE    File with Duo API access and configuration. Overrides all parameters. Default is %s' % (get_conf('CONFIG_FILE'))
+	print '  -o, --file   FILE    JSON file to be used as storage for seen devices. Default is %s' % (get_conf('DEVICES_FILE'))
+	print '  -b, --backup FILE    JSON file with a backup of the trusted/seen USB devices. Default is %s' % (get_conf('BACKUP_FILE'))
+	print '  -r, --reject FILE    JSON file to keep track of the rejected USB devices. Default is %s' % (get_conf('REJECTED_FILE'))
+	print '  -p, --pid    FILE    File to keep track of the daemon PID. Default is %s' % (get_conf('PID_FILE'))
+	print '  -u  --user   VALUE   Username to use for the DUO integration and send the push request.'
 	print
 	print 'Examples:'
 	print '  %s -D -o usb.json -b usb.bak' % (sys.argv[0])
-	print '  %s -C 2 -R 1 -o usb.json -b usb.bak -r reject.json' % (sys.argv[0])
+	print '  %s -C 2 -P 1 -o usb.json -b usb.bak -r reject.json' % (sys.argv[0])
 
 # Function to sign a request to be sent to Duo. Output is Date and Auth headers.
 def get_duo_headers(method, host, path, params, skey, ikey):
@@ -244,11 +244,11 @@ def duo_2fac_confirmation(description):
 	duo_path = '/auth/v2/check'
 	duo_url = 'https://' + duo_host + duo_path
 	duo_headers = get_duo_headers(
-		'GET', 
-		duo_host, 
-		duo_path, 
-		{}, 
-		duo_skey, 
+		'GET',
+		duo_host,
+		duo_path,
+		{},
+		duo_skey,
 		duo_ikey
 	)
 	r = requests.get(duo_url, headers=duo_headers)
@@ -260,11 +260,11 @@ def duo_2fac_confirmation(description):
 	duo_url = 'https://' + duo_host + duo_path
 	params = {'username': username}
 	duo_headers = get_duo_headers(
-		'POST', 
-		duo_host, 
-		duo_path, 
-		params, 
-		duo_skey, 
+		'POST',
+		duo_host,
+		duo_path,
+		params,
+		duo_skey,
 		duo_ikey
 	)
 	r = requests.post(duo_url, data=params, headers=duo_headers)
@@ -276,17 +276,17 @@ def duo_2fac_confirmation(description):
 	duo_url = 'https://' + duo_host + duo_path
 	push_msg = 'USB Connect: ' + description
 	params = {
-		'username': username, 
-		'factor': 'push', 
-		'device': 'auto', 
+		'username': username,
+		'factor': 'push',
+		'device': 'auto',
 		'type': push_msg
 	}
 	duo_headers = get_duo_headers(
-		'POST', 
-		duo_host, 
-		duo_path, 
-		params, 
-		duo_skey, 
+		'POST',
+		duo_host,
+		duo_path,
+		params,
+		duo_skey,
 		duo_ikey
 	)
 	r = requests.post(duo_url, data=params, headers=duo_headers)
@@ -440,20 +440,20 @@ def discover_devices(check_trusted=False):
 			if device_id not in trusted_ids and device_id not in requested_ids:
 				if device_id in rejected_ids:
 					logger.info(
-						'REJECTED DEVICE CONNECTED! %s' 
+						'REJECTED DEVICE CONNECTED! %s'
 						% (device_entry(vendor, product, serial, description, device_id))
 					)
 					osx_notification(
-						'Rejected USB Device Connected', 
+						'Rejected USB Device Connected',
 						'Use DUO in your phone to verify and trust this device'
 					)
 				else:
 					logger.info(
-						'UNKNOWN DEVICE CONNECTED! %s' 
+						'UNKNOWN DEVICE CONNECTED! %s'
 						% (device_entry(vendor, product, serial, description, device_id))
 					)
 					osx_notification(
-						'Unknown USB Device Connected', 
+						'Unknown USB Device Connected',
 						'Use DUO in your phone to verify and trust this device'
 					)
 
@@ -487,14 +487,14 @@ def discover_devices(check_trusted=False):
 			# Log trusted device
 			if device_id not in current_trusted_ids:
 				logger.info(
-					'Trusted device connected: %s' 
+					'Trusted device connected: %s'
 					% (device_entry(vendor, product, serial, description, device_id))
 				)
 				current_trusted_ids.append(device_id)
 
 			# Avoid smashing DUO with requests
 			if (
-				clear_requested_current > clear_requested_timeout and 
+				clear_requested_current > clear_requested_timeout and
 				device_id in requested_ids
 			):
 				requested_ids.remove(device_id)
@@ -572,8 +572,8 @@ def main():
 
 	# Setting up logging
 	handler = logging.handlers.TimedRotatingFileHandler(
-		get_conf('LOG_FILE'), 
-		when="midnight", 
+		get_conf('LOG_FILE'),
+		when="midnight",
 		backupCount=3
 	)
 	handler.suffix = "%Y-%m-%d.old"
@@ -583,10 +583,10 @@ def main():
 
 	try:
 		opts, args = getopt.getopt(
-			sys.argv[1:], 
-			"hDRc:l:C:R:o:b:r:p:u:", 
+			sys.argv[1:],
+			"hDRc:l:C:P:o:b:r:p:u:",
 			[
-				"help", "find", "reset", "config", "log", "conn", 
+				"help", "find", "reset", "config", "log", "conn",
 				"action", "file", "backup", "reject", "pid", "user"
 			]
 		)
@@ -610,7 +610,7 @@ def main():
   			set_conf('LOG_FILE', arg)
   		elif opt in ("-C", "--conn"):
   			set_conf('PARANOIA_CONNECT', arg)
-  		elif opt in ("-R", "--action"):
+  		elif opt in ("-P", "--action"):
   			set_conf('PARANOIA_REJECT', arg)
   		elif opt in ("-o", "--file"):
   			set_conf('DEVICES_FILE', arg)
